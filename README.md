@@ -3,5 +3,5 @@ The main idea behind this project was to create a automatic trading bot, which b
 '''python
 
 import alpaca
-
+'''
 
