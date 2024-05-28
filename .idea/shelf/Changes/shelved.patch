@@ -1,0 +1,57 @@
+Index: .venv/streamlitTest.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import streamlit as st\r\nimport yfinance as yf\r\nimport matplotlib.pyplot as plt\r\nimport datetime as dt\r\nfrom io import BytesIO\r\n\r\n# Set the start and end dates and times\r\nstart_date = dt.datetime(2024, 5, 22, 9, 30)\r\nend_date = dt.datetime(2024, 5, 22, 16)\r\n\r\n# Get the data from Yahoo Finance\r\naapl_data = yf.download('AAPL', start=start_date, end=end_date, interval='1m')\r\ntsla_data = yf.download('TSLA', start=start_date, end=end_date, interval='1m')\r\n\r\n# Create a function to generate the graph\r\ndef generate_graph(data, ticker):\r\n    fig, ax = plt.subplots()\r\n    ax.plot(data['Close'])\r\n    ax.set_xlabel('Time')\r\n    ax.set_ylabel('Stock Price ($)')\r\n    ax.set_title(f'{ticker} Stock Price on May 22, 2024')\r\n    ax.grid(True)\r\n    buf = BytesIO()\r\n    fig.savefig(buf, format='png')\r\n    buf.seek(0)\r\n    return buf.getvalue()\r\n\r\n# Create the Streamlit app\r\nst.title(\"Stock Price Graphs\")\r\n\r\n# Add a dropdown menu to select the ticker\r\nticker_selection = st.selectbox('Select Ticker', ['AAPL', 'TSLA'])\r\n\r\n# Display the selected graph\r\nif ticker_selection == 'AAPL':\r\n    st.image(generate_graph(aapl_data, 'AAPL'))\r\nelse:\r\n    st.image(generate_graph(tsla_data, 'TSLA'))
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.venv/streamlitTest.py b/.venv/streamlitTest.py
+--- a/.venv/streamlitTest.py	(revision 26aaa76ad2406aad756698342e1fda42ae96dd7d)
++++ b/.venv/streamlitTest.py	(date 1716782659982)
+@@ -1,8 +1,7 @@
+ import streamlit as st
+ import yfinance as yf
+-import matplotlib.pyplot as plt
+ import datetime as dt
+-from io import BytesIO
++import plotly.graph_objects as go
+ 
+ # Set the start and end dates and times
+ start_date = dt.datetime(2024, 5, 22, 9, 30)
+@@ -12,19 +11,6 @@
+ aapl_data = yf.download('AAPL', start=start_date, end=end_date, interval='1m')
+ tsla_data = yf.download('TSLA', start=start_date, end=end_date, interval='1m')
+ 
+-# Create a function to generate the graph
+-def generate_graph(data, ticker):
+-    fig, ax = plt.subplots()
+-    ax.plot(data['Close'])
+-    ax.set_xlabel('Time')
+-    ax.set_ylabel('Stock Price ($)')
+-    ax.set_title(f'{ticker} Stock Price on May 22, 2024')
+-    ax.grid(True)
+-    buf = BytesIO()
+-    fig.savefig(buf, format='png')
+-    buf.seek(0)
+-    return buf.getvalue()
+-
+ # Create the Streamlit app
+ st.title("Stock Price Graphs")
+ 
+@@ -33,6 +19,12 @@
+ 
+ # Display the selected graph
+ if ticker_selection == 'AAPL':
+-    st.image(generate_graph(aapl_data, 'AAPL'))
++    fig = go.Figure(data=[go.Line(y=aapl_data['Close'])])
++    fig.update_layout(yaxis_range=[aapl_data['Close'].min(), aapl_data['Close'].max()])
++    fig.add_shape(type="line", x0="2024-05-22 10:00", y0=aapl_data['Close'].min(), x1="2024-05-22 10:00", y1=aapl_data['Close'].max(), line=dict(color="red", width=2))
++    st.plotly_chart(fig, height=500)
+ else:
+-    st.image(generate_graph(tsla_data, 'TSLA'))
+\ No newline at end of file
++    fig = go.Figure(data=[go.Line(y=tsla_data['Close'])])
++    fig.update_layout(yaxis_range=[tsla_data['Close'].min(), tsla_data['Close'].max()])
++    fig.add_shape(type="line", x0="2024-05-22 10:00", y0=tsla_data['Close'].min(), x1="2024-05-22 10:00", y1=tsla_data['Close'].max(), line=dict(color="red", width=2))
++    st.plotly_chart(fig, height=500)
+\ No newline at end of file

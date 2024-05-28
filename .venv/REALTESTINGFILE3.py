@@ -7,7 +7,7 @@ import pandas as pd
 import math
 import matplotlib.pyplot as plt
 
-buy_spacer = 1.0038
+buy_spacer = 1.0088
 normal_stop_loss_constant = 0.0025
 trailing_stop_loss_constant = 0.003
 
@@ -307,7 +307,7 @@ def create_graphs(test_date):
 
 download_tickers()
 
-test_date_list = ['2024-05-13', '2024-05-15', '2024-05-16', '2024-05-17']
+test_date_list = ['2024-05-13', '2024-05-14', '2024-05-15', '2024-05-16', '2024-05-17']
 
 for day in test_date_list:
     test_date_dt = datetime.strptime(day, '%Y-%m-%d')
