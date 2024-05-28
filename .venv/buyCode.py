@@ -8,15 +8,7 @@ import schedule
 from datetime import datetime, time
 import pytz
 
-# ******************** EDIT DURING TRIALS ***************************
-
-buy_cap_base = 3000
-nasdaq_smp_difference_constant = 0.00025
-
-# *******************************************************************
-
 condensed_stock_list = []
-final_flagged_list = []
 
 api = alp.REST('PKJIDRFO8XYMG1VJ2HZB',
                'tK0FDThUKft0vfC2NBmmo8BEQC7atyNgpkiFy5k3',
@@ -30,21 +22,6 @@ def download_tickers():
         for line in filehandle:
             ind_ticker = line[:-1]
             condensed_stock_list.append(ind_ticker)
-
-
-# places a buy order
-def place_order(ticker, notional):
-    try:
-        api.submit_order(symbol=ticker, notional=notional)
-        print("bought " + ticker)
-    except:
-        data_close = yf.Ticker(ticker).history(period="5d", interval="5m")
-        current_price = data_close['Close'].iloc[-1]
-
-        quantity = int(notional/current_price)
-        if quantity > 0:
-            api.submit_order(symbol=ticker, qty=quantity)
-            print("bought " + ticker)
 
 
 # function to calculate RSI
@@ -162,6 +139,16 @@ def finish_time():
     return us_format_time
 
 
+# using yfinance (try, except is for error management)
+def get_current_price(ticker):
+    data_close = yf.Ticker(ticker).history(period="5d", interval="1m")
+    try:
+        current_price = data_close['Close'].iloc[-1]
+        return current_price
+    except:
+        return -1
+
+
 def main_BUY_function():
     print("executing main_BUY...")
     for stock in condensed_stock_list:
@@ -178,53 +165,79 @@ def main_BUY_function():
                 if stock == pos:
                     no_pre_own = False
             if no_pre_own:
-                print(stock + " flagged")
-                global final_flagged_list
-                final_flagged_list.append(stock)
+                if float(get_current_price(stock)) > 2:
+                    print(stock + " flagged")
+                    add_to_queue(stock)
 
+                    add_watchlist(stock, time_in_minutes(), get_current_price(stock))
 
-def distribute_cash_and_execute(flagged_list):
-
-    buy_cap = buy_cap_base*(nasdaq_smp())
-    if buy_cap > 0:
-        account = api.get_account()
-        account_cash = float(account.cash)
-        for stock in flagged_list:
-            if account_cash >= buy_cap:
-                try:
-                    place_order(stock, buy_cap)
-                    account_cash -= buy_cap
-                except:
+                    target_timezone_1 = pytz.timezone('US/Eastern')
+                    current_time_1 = datetime.now(target_timezone_1).time()
+                    print(current_time_1)
+                else:
                     continue
-    else:
-        print(f"Nasdaq and S&P are down {nasdaq_smp()*100} % in past 20 mins, no buys")
 
 
-def nasdaq_smp():  # changed dow to nasdaq
+def add_watchlist(ticker_addition, time_in_min, price_addition):
+    watchlist = []
+    timer_list = []
+    price_list = []
 
-    # NASDAQ data
-    nasdaq_data = yf.Ticker("^IXIC")
-    nasdaq_data_history = nasdaq_data.history(period='5d', interval='1m')
-    twenty_min_close = float(nasdaq_data_history['Close'].iloc[-20])
-    one_min_close = float(nasdaq_data_history['Close'].iloc[-1])
-    nasdaq_percent_diff = abs((one_min_close-twenty_min_close)/twenty_min_close)
-    if twenty_min_close > one_min_close:
-        nasdaq_percent_diff *= -1
+    with open('watchlist.txt', 'r') as filehandle:  # grabs current watchlist
+        for line in filehandle:
+            watch_ticker = line[:-1]
+            watchlist.append(watch_ticker)
 
-    # SMP data
-    sp_data = yf.Ticker("^GSPC")
-    sp_data_history = sp_data.history(period='5d', interval='1m')
-    sp_twenty_min_close = float(sp_data_history['Close'].iloc[-20])
-    sp_one_min_close = float(sp_data_history['Close'].iloc[-1])
-    sp_percent_diff = abs((sp_one_min_close - sp_twenty_min_close) / sp_twenty_min_close)
-    if twenty_min_close > one_min_close:
-        sp_percent_diff *= -1
+    watchlist.append(ticker_addition)
 
-    avg_diff = (nasdaq_percent_diff+sp_percent_diff)/2
-    if avg_diff < nasdaq_smp_difference_constant:
-        return avg_diff
-    else:
-        return 1 + avg_diff
+    with open('watchlist.txt', 'w') as file:  # updates with new stock
+        for ticker in watchlist:
+            file.write(ticker + "\n")
+
+    with open('timers.txt', 'r') as filehandle:  # grabs current timers
+        for line in filehandle:
+            time = line[:-1]
+            timer_list.append(time)
+
+    timer_list.append(time_in_min)
+
+    with open('timers.txt', 'w') as file:  # updates with new timer
+        for time in timer_list:
+            file.write(str(time) + "\n")
+
+    with open('prices.txt', 'r') as filehandle:  # grabs current price list
+        for line in filehandle:
+            price = line[:-1]
+            price_list.append(price)
+
+    price_list.append(price_addition)
+
+    with open('prices.txt', 'w') as file:  # updates with new price
+        for price in price_list:
+            file.write(str(price) + "\n")
+
+
+def time_in_minutes():
+    target_timezone_1 = pytz.timezone('US/Eastern')
+    current_time_1 = datetime.now(target_timezone_1).time()
+    split_time = str(current_time_1).split(':')
+    return (int(split_time[0])*60)+int(split_time[1])
+
+
+def add_to_queue(ticker):  # buy code
+    queue_list = []
+    new_in_queue = ticker + " FLAG"
+
+    with open('recordsqueue.txt', 'r') as filehandle:  # grabs current watchlist
+        for line in filehandle:
+            in_queue = line[:-1]
+            queue_list.append(in_queue)
+
+    queue_list.append(new_in_queue)
+
+    with open('recordsqueue.txt', 'w') as file:  # updates with new stock
+        for obj in queue_list:
+            file.write(obj + "\n")
 
 
 first_run = True
@@ -233,18 +246,14 @@ first_run = True
 def run_main_logic():
 
     start_time = t.time()
-    global final_flagged_list
-    final_flagged_list = []
-    main_BUY_function()
-    distribute_cash_and_execute(final_flagged_list)
-    print(final_flagged_list)
+    main_BUY_function()  # all this does is append stocks to the watchlist
     end_time = t.time()
     runtime = end_time - start_time
     print('runtime: ' + str(runtime) + ' seconds')
     print(finish_time())
 
 
-# Schedule the main logic to run every 20 minutes from 9:30 AM to 4:00 PM
+# Schedule the main logic to run every 20 minutes from 10:10 AM to 3:11 PM
 download_tickers()
 schedule.every().day.at("10:10").do(run_main_logic)
 schedule.every().day.at("15:11").do(schedule.clear)
@@ -253,7 +262,6 @@ target_time = time(10, 10)
 target_timezone = pytz.timezone('US/Eastern')
 
 first_iteration = True
-
 
 while True:
     # Get the current time in EST

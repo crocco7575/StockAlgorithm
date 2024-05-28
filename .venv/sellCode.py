@@ -3,6 +3,8 @@ import schedule
 import time as t
 import alpaca_trade_api as alp
 import yfinance as yf
+import pytz
+from datetime import datetime, time
 
 # ******************** EDIT DURING TRIALS ***************************
 
@@ -95,6 +97,7 @@ def close_position(ticker):
 
     requests.delete(url, headers=headers)
     print("sold " + ticker)
+    add_to_queue(ticker)
 
 
 # using yfinance (try, except is for error management)
@@ -140,39 +143,46 @@ def trailing_stop_loss(ticker):  # returns True if you need to sell
         return False
 
 
-schedule.every(1).minutes.do(main_SELL_function)
+def add_to_queue(ticker):  # sell code
+    queue_list = []
+    new_in_queue = ticker + " SELL"
+
+    with open('recordsqueue.txt', 'r') as filehandle:  # grabs current watchlist
+        for line in filehandle:
+            in_queue = line[:-1]
+            queue_list.append(in_queue)
+
+    queue_list.append(new_in_queue)
+
+    with open('recordsqueue.txt', 'w') as file:  # updates with new stock
+        for obj in queue_list:
+            file.write(obj + "\n")
+
+
+schedule.every().day.at("10:10").do(main_SELL_function)
+schedule.every().day.at("16:00").do(schedule.clear)
+
+target_time = time(10, 10)
+target_timezone = pytz.timezone('US/Eastern')
+
+first_iteration = True
 
 while True:
+    # Get the current time in EST
+    current_time = datetime.now(target_timezone).time()
+
+    # Get the current datetime in EST
+    current_datetime = datetime.now(target_timezone).replace(microsecond=0, second=0)
+
+    # Combine the current date with the target time
+    target_datetime = current_datetime.replace(hour=target_time.hour, minute=target_time.minute)
+
+    # Check if the current time is equal to the target time
+    if current_datetime.time() == target_time:
+        if first_iteration:
+            print("Intiating 1 min schedule...")
+            schedule.every(1).minutes.do(main_SELL_function)
+            first_iteration = False
+    # Keep the script running
     schedule.run_pending()
     t.sleep(1)
-
-#
-# # Schedule the main logic to run every 2 seconds from 9:30 AM to 4:00 PM
-#
-# schedule.every().day.at("10:10").do(main_SELL_function)
-# schedule.every().day.at("15:54").do(schedule.clear)
-#
-# target_time = time(10, 10)
-# target_timezone = pytz.timezone('US/Eastern')
-#
-# first_iteration = True
-#
-# while True:
-#     # Get the current time in EST
-#     current_time = datetime.now(target_timezone).time()
-#
-#     # Get the current datetime in EST
-#     current_datetime = datetime.now(target_timezone).replace(microsecond=0, second=0)
-#
-#     # Combine the current date with the target time
-#     target_datetime = current_datetime.replace(hour=target_time.hour, minute=target_time.minute)
-#
-#     # Check if the current time is equal to the target time
-#     if current_datetime.time() == target_time:
-#         if first_iteration:
-#             print("Intiating 2 sec schedule...")
-#             schedule.every(2).seconds.do(main_SELL_function)
-#             first_iteration = False
-#     # Keep the script running
-#     schedule.run_pending()
-#     t.sleep(1)
