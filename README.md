@@ -1,4 +1,4 @@
-## About
+## About/Setup
 The main idea behind this project was to create a **automatic** trading bot, which buys and sells the live market based on various indicators. To implement this, the main imports we used were:
 ```python
 import alpaca
