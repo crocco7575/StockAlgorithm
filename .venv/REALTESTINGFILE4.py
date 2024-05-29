@@ -7,7 +7,7 @@ import pandas as pd
 import math
 import matplotlib.pyplot as plt
 
-buy_spacer = 1.0093
+buy_spacer = 1.0168
 normal_stop_loss_constant = 0.0025
 trailing_stop_loss_constant = 0.003
 
