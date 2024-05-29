@@ -5,16 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7e082a01-a4d2-4dc0-8bba-9ffd3c957cab" name="Changes" comment="updates">
-      <change beforePath="$PROJECT_DIR$/.venv/BigDataTest.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.venv/REALTESTINGFILE1.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/REALTESTINGFILE1.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.venv/REALTESTINGFILE2.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/REALTESTINGFILE2.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.venv/REALTESTINGFILE3.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/REALTESTINGFILE3.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.venv/REALTESTINGFILE4.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/REALTESTINGFILE4.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.venv/REALTESTINGFILE5.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/REALTESTINGFILE5.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.venv/buyCode.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/buyCode.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.venv/buyschedule.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.venv/sellCode.py" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/sellCode.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.venv/sellschedule.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.venv/condensedtickers.txt" beforeDir="false" afterPath="$PROJECT_DIR$/.venv/condensedtickers.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -66,11 +63,14 @@
     "Python.REALTESTINGFILE3.executor": "Run",
     "Python.REALTESTINGFILE4.executor": "Run",
     "Python.REALTESTINGFILE5.executor": "Run",
+    "Python.bigboytest.executor": "Run",
     "Python.buyCode.executor": "Debug",
     "Python.buyschedule.executor": "Run",
     "Python.chadtesting.executor": "Run",
     "Python.cookin.executor": "Run",
     "Python.finalSell.executor": "Run",
+    "Python.getridofsync.executor": "Run",
+    "Python.machinelearningtest.executor": "Run",
     "Python.multicoreprocessing.executor": "Run",
     "Python.redistributeCash.executor": "Run",
     "Python.sellCode.executor": "Run",
@@ -79,22 +79,23 @@
     "Python.testing.executor": "Run",
     "Python.testingcsv.executor": "Run",
     "Python.testtesttess.executor": "Run",
+    "Python.thisisnewtestML.executor": "Run",
     "Python.tradeAnalyzer.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "git-widget-placeholder": "records",
-    "last_opened_file_path": "C:/Users/camer/PycharmProjects/StockAnalysisPicker/.venv/records_folder/buy_spacer",
+    "last_opened_file_path": "C:/Users/camer/PycharmProjects/StockAnalysisPicker/.venv",
     "settings.editor.selected.configurable": "preferences.keymap"
   }
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\camer\PycharmProjects\StockAnalysisPicker\.venv\records_folder\buy_spacer" />
-      <recent name="C:\Users\camer\PycharmProjects\StockAnalysisPicker\.venv\records_folder\buy_spacer\1.0078" />
       <recent name="C:\Users\camer\PycharmProjects\StockAnalysisPicker\.venv" />
+      <recent name="C:\Users\camer\PycharmProjects\StockAnalysisPicker\.venv\records_folder\buy_spacer" />
+      <recent name="C:\Users\camer\PycharmProjects\StockAnalysisPicker\.venv\records_folder\buy_spacer\1.0153" />
+      <recent name="C:\Users\camer\PycharmProjects\StockAnalysisPicker\.venv\records_folder\buy_spacer\1.0078" />
       <recent name="C:\Users\camer\PycharmProjects\StockAnalysisPicker\.venv\records_folder\buy_spacer\1.0028" />
-      <recent name="C:\Users\camer\PycharmProjects\StockAnalysisPicker\.venv\records_folder\buy_spacer\1.0028\2024-05-13" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\camer\PycharmProjects\StockAnalysisPicker\.venv" />
