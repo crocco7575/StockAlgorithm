@@ -149,7 +149,9 @@ from sklearn.ensemble import RandomForestClassifier
 		- XGBoost was able to get **85% accuracy** predicting stocks going over/under -2% from this 156k dataset
 - This data ended up being the most reliable, so we are currently working on getting funds for the higher tier dataset (10-15 years of data) 
 - The other attempted method to collect a ML dataset was synthetic generation of trades
-- 
+	- We generated simulated 5-minute stock price data using Python vectorization, applying random percentage changes to previous closing prices. 
+	- To ensure the data reflected our ticker list, we analyzed each stock's volatility (1-9) and price (1-1000) and calculated the percentage of tickers for each rating pair. We then generated simulated data to match these percentages, creating a representative AI training dataset.
+	- This method provided 500k + trades for training, but proved to be quite inefficient for achieving a high accuracy (75% was the result) compared to the real historical data
 
 
 
